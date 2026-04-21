@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { sendMessage, inlineKeyboard } from "@/lib/telegram"
 import { format } from "date-fns"
+import type { Goal } from "@prisma/client"
 
 export async function GET() {
   const users = await prisma.user.findMany({ where: { telegramChatId: { not: null } } })
@@ -22,7 +23,7 @@ export async function GET() {
         continue
       }
 
-      const buttons = open.map((g) => [{ text: `✓ ${g.title.slice(0, 30)}`, callback_data: `done:${g.id}` }])
+      const buttons = open.map((g: Goal) => [{ text: `✓ ${g.title.slice(0, 30)}`, callback_data: `done:${g.id}` }])
       await sendMessage(
         user.telegramChatId,
         `End of day. Open: ${open.length} goal${open.length !== 1 ? "s" : ""}.`,

@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/cron/morning",
-      "schedule": "0 8 * * *"
+      "schedule": "1 0 * * *"
     },
     {
       "path": "/api/cron/evening",
