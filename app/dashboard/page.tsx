@@ -6,7 +6,6 @@ import { getHabitsWithStats } from "@/lib/actions/habits"
 import { prisma } from "@/lib/db"
 import { GoalCard } from "@/components/goal-card"
 import { HabitCard } from "@/components/habit-card"
-import type { Goal } from "@prisma/client"
 
 function Ring({ pct, label, total }: { pct: number; label: string; total: number }) {
   const r = 36
@@ -134,7 +133,7 @@ export default async function DashboardPage() {
             </p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              {weekGoals.slice(0, 5).map((g: Goal) => (
+              {weekGoals.slice(0, 5).map((g) => (
                 <GoalCard key={g.id} goal={g} />
               ))}
             </div>
@@ -156,7 +155,7 @@ export default async function DashboardPage() {
             Overdue — {overdue.length} item{overdue.length !== 1 ? "s" : ""}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {overdue.map((g: Goal) => (
+            {overdue.map((g) => (
               <GoalCard key={g.id} goal={g} />
             ))}
           </div>
