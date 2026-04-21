@@ -30,19 +30,19 @@ export async function GET() {
       let text = `<b>Morning. ${format(now, "EEEE, MMM d")}</b>${nudge}`
 
       if (dailyGoals.length > 0) {
-        text += `\n\n<b>Today's goals:</b>\n` + dailyGoals.map((g) => `• ${g.title}`).join("\n")
+        text += `\n\n<b>Today's goals:</b>\n` + dailyGoals.map((g: { title: string }) => `• ${g.title}`).join("\n")
       }
 
       if (habits.length > 0) {
-        text += `\n\n<b>Habits:</b>\n` + habits.map((h) => {
-          const done = h.habitLogs.some((l) => l.completed)
+        text += `\n\n<b>Habits:</b>\n` + habits.map((h: { title: string; habitLogs: { completed: boolean }[] }) => {
+          const done = h.habitLogs.some((l: { completed: boolean }) => l.completed)
           return `${done ? "✓" : "·"} ${h.title}`
         }).join("\n")
       }
 
       const buttons = habits
-        .filter((h) => !h.habitLogs.some((l) => l.completed))
-        .map((h) => [{ text: `✓ ${h.title.slice(0, 30)}`, callback_data: `done:${h.id}` }])
+        .filter((h: { habitLogs: { completed: boolean }[] }) => !h.habitLogs.some((l: { completed: boolean }) => l.completed))
+        .map((h: { id: string; title: string }) => [{ text: `✓ ${h.title.slice(0, 30)}`, callback_data: `done:${h.id}` }])
 
       await sendMessage(user.telegramChatId, text, buttons.length > 0 ? inlineKeyboard(buttons) : {})
     } catch (e) {

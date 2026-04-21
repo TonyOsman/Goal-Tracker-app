@@ -36,14 +36,14 @@ export async function GET() {
 
       if (weekGoals.length === 0 && monthGoals.length === 0) continue
 
-      const habitStreaks = habits.map((h) => ({
+      const habitStreaks = habits.map((h: { title: string; habitLogs: unknown[] }) => ({
         goalTitle: h.title,
         streak: h.habitLogs.length,
       }))
 
       const nudge = await generateDailyNudge({
-        weekGoals: weekGoals.map((g) => ({ title: g.title, status: g.status })),
-        monthGoals: monthGoals.map((g) => ({ title: g.title, status: g.status })),
+        weekGoals: weekGoals.map((g: { title: string; status: string }) => ({ title: g.title, status: g.status })),
+        monthGoals: monthGoals.map((g: { title: string; status: string }) => ({ title: g.title, status: g.status })),
         habitStreaks,
       })
 

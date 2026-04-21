@@ -87,8 +87,8 @@ export async function getReviewContext(period: ReviewPeriod) {
   )
 
   const metricChanges = goals
-    .filter((g) => g.type === "METRIC" && g.currentValue != null)
-    .map((g) => ({
+    .filter((g: { type: string; currentValue: number | null }) => g.type === "METRIC" && g.currentValue != null)
+    .map((g: { title: string; currentValue: number | null; initialValue: number | null; unit: string | null }) => ({
       goalTitle: g.title,
       delta: (g.currentValue ?? 0) - (g.initialValue ?? 0),
       unit: g.unit ?? "",
@@ -97,10 +97,10 @@ export async function getReviewContext(period: ReviewPeriod) {
   return {
     startDate: start.toISOString().split("T")[0],
     endDate: end.toISOString().split("T")[0],
-    goals: goals.map((g) => ({ title: g.title, status: g.status, scope: g.scope })),
+    goals: goals.map((g: { title: string; status: string; scope: string }) => ({ title: g.title, status: g.status, scope: g.scope })),
     habitLogs: habitSummary,
     metricChanges,
-    overdue: overdue.map((g) => ({ title: g.title, dueDate: g.dueDate.toISOString().split("T")[0] })),
+    overdue: overdue.map((g: { title: string; dueDate: Date }) => ({ title: g.title, dueDate: g.dueDate.toISOString().split("T")[0] })),
   }
 }
 

@@ -45,12 +45,12 @@ export async function getHabitsWithStats(userId: string) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  return habits.map((habit) => {
+  return habits.map((habit: { id: string; title: string; tags: string[]; habitLogs: { date: Date; completed: boolean }[] }) => {
     const logMap = new Map(
-      habit.habitLogs.map((l) => {
+      habit.habitLogs.map((l: { date: Date; completed: boolean }) => {
         const d = new Date(l.date)
         d.setHours(0, 0, 0, 0)
-        return [d.getTime(), l.completed]
+        return [d.getTime(), l.completed] as [number, boolean]
       })
     )
 

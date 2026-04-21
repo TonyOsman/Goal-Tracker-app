@@ -44,8 +44,8 @@ async function handleMessage(update: TelegramUpdate) {
       where: { userId: user.id, scope: "DAY", startDate: { lte: end }, dueDate: { gte: start }, status: { not: "DONE" } },
     })
     if (goals.length === 0) { await sendMessage(chatId, "No open goals for today."); return }
-    const lines = goals.map((g) => `• ${g.title}`).join("\n")
-    const buttons = goals.map((g) => [{ text: `✓ ${g.title.slice(0, 30)}`, callback_data: `done:${g.id}` }])
+    const lines = goals.map((g: { title: string }) => `• ${g.title}`).join("\n")
+    const buttons = goals.map((g: { id: string; title: string }) => [{ text: `✓ ${g.title.slice(0, 30)}`, callback_data: `done:${g.id}` }])
     await sendMessage(chatId, `<b>Today — ${format(now, "MMM d")}</b>\n\n${lines}`, inlineKeyboard(buttons))
     return
   }
@@ -58,7 +58,7 @@ async function handleMessage(update: TelegramUpdate) {
       where: { userId: user.id, scope: "WEEK", startDate: { lte: we }, dueDate: { gte: ws } },
     })
     if (goals.length === 0) { await sendMessage(chatId, "No weekly goals."); return }
-    const lines = goals.map((g) => `${g.status === "DONE" ? "✓" : "·"} ${g.title}`).join("\n")
+    const lines = goals.map((g: { title: string; status: string }) => `${g.status === "DONE" ? "✓" : "·"} ${g.title}`).join("\n")
     await sendMessage(chatId, `<b>This week</b>\n\n${lines}`)
     return
   }
@@ -91,11 +91,11 @@ async function handleMessage(update: TelegramUpdate) {
     })
     if (habits.length === 0) { await sendMessage(chatId, "No active habits."); return }
     const today = new Date(); today.setHours(0, 0, 0, 0)
-    const lines = habits.map((h) => {
+    const lines = habits.map((h: { title: string; habitLogs: { date: Date }[] }) => {
       let streak = 0
       for (let i = 0; i < 30; i++) {
         const d = new Date(today); d.setDate(today.getDate() - i)
-        const found = h.habitLogs.find((l) => { const ld = new Date(l.date); ld.setHours(0,0,0,0); return ld.getTime() === d.getTime() })
+        const found = h.habitLogs.find((l: { date: Date }) => { const ld = new Date(l.date); ld.setHours(0,0,0,0); return ld.getTime() === d.getTime() })
         if (found) streak++; else if (i > 0) break
       }
       return `${streak > 0 ? "🔥" : "·"} ${h.title}: ${streak} days`
