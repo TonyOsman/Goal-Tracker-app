@@ -52,7 +52,7 @@ export default async function TodayPage() {
             Habits
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {habits.map((h) => (
+            {habits.map((h: { id: string; title: string; tags: string[]; streak: number; last7: { date: Date; completed: boolean }[]; todayDone: boolean }) => (
               <HabitCard key={h.id} goal={h} streak={h.streak} last7={h.last7} todayDone={h.todayDone} />
             ))}
           </div>
